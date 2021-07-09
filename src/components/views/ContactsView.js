@@ -10,10 +10,10 @@ import { getLoading } from "../../redux/contacts/contacts-selectors";
 import { ContactsLoader } from "../loader/Loader";
 
 class ContactsView extends Component {
-  state = {};
   componentDidMount() {
     this.props.fetchContacts();
   }
+
   render() {
     return (
       <div className={styles.container}>

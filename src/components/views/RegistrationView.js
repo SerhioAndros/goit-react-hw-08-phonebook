@@ -1,72 +1,79 @@
-import React, { Component } from "react";
+import PropTypes from "prop-types";
+
+import React, { useState } from "react";
 import { connect } from "react-redux";
+
 import { register } from "../../redux/auth/auth-operations";
 import styles from "./RegistrationView.module.css";
 
-class RegistrationView extends Component {
-  state = {
-    name: "",
-    email: "",
-    password: "",
-  };
+const RegistrationView = ({ onRegister }) => {
+  const [userName, setUserName] = useState("");
+  const handleInputName = (evt) => setUserName(evt.target.value);
+  const [userMail, setUserMail] = useState("");
+  const handleInputMail = (evt) => setUserMail(evt.target.value);
+  const [userPassword, setUserPassword] = useState("");
+  const handleInputPassword = (evt) => setUserPassword(evt.target.value);
 
-  handleChange = ({ target: { name, value } }) => {
-    this.setState({ [name]: value });
-  };
-
-  handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
+    const userData = {
+      name: userName,
+      email: userMail,
+      password: userPassword,
+    };
 
-    this.props.onRegister(this.state);
-    this.setState({ name: "", email: "", password: "" });
+    onRegister(userData);
+    setUserName("");
+    setUserMail("");
+    setUserPassword("");
   };
 
-  render() {
-    const { name, email, password } = this.state;
+  return (
+    <div className={styles.wrapper}>
+      <h1 className={styles.registrationHeader}>Зарегайся!!!</h1>
 
-    return (
-      <div className={styles.wrapper}>
-        <h1 className={styles.registrationHeader}>Зарегайся!!!</h1>
+      <form className={styles.form} onSubmit={handleSubmit}>
+        <label className={styles.label}>
+          Ник
+          <input
+            type="text"
+            name="name"
+            value={userName}
+            onChange={handleInputName}
+          />
+        </label>
 
-        <form className={styles.form} onSubmit={this.handleSubmit}>
-          <label className={styles.label}>
-            Ник
-            <input
-              type="text"
-              name="name"
-              value={name}
-              onChange={this.handleChange}
-            />
-          </label>
+        <label className={styles.label}>
+          Мейл
+          <input
+            type="email"
+            name="email"
+            value={userMail}
+            onChange={handleInputMail}
+          />
+        </label>
 
-          <label className={styles.label}>
-            Мейл
-            <input
-              type="email"
-              name="email"
-              value={email}
-              onChange={this.handleChange}
-            />
-          </label>
+        <label className={styles.label}>
+          Пароль (никому не говори)
+          <input
+            type="password"
+            name="password"
+            value={userPassword}
+            onChange={handleInputPassword}
+          />
+        </label>
 
-          <label className={styles.label}>
-            Пароль (никому не говори)
-            <input
-              type="password"
-              name="password"
-              value={password}
-              onChange={this.handleChange}
-            />
-          </label>
+        <button className={styles.submitBtn} type="submit">
+          Зарегать
+        </button>
+      </form>
+    </div>
+  );
+};
 
-          <button className={styles.submitBtn} type="submit">
-            Зарегать
-          </button>
-        </form>
-      </div>
-    );
-  }
-}
+RegistrationView.propTypes = {
+  onRegister: PropTypes.func.isRequired,
+};
 
 const mapDispatchToProps = (dispatch) => ({
   onRegister: (data) => dispatch(register(data)),
